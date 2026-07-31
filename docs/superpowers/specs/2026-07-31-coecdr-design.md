@@ -195,7 +195,7 @@ array (the background references, explicitly marked non-authoritative), and
   "century": 4,
   "reigning_pontiff": "rp:sylvester-i",
   "convened_by": { "text": "Emperor Constantine I", "rp": null },
-  "confirmed_by": "rp:sylvester-i",
+  "confirmed_by": null,
   "recognized_as_ecumenical_by": ["catholic", "eastern_orthodox", "oriental_orthodox", "church_of_the_east"],
   "reception_note": null,
   "significance": "Defined the consubstantiality of the Son with the Father against Arianism; promulgated the original Nicene Creed and a common rule for the date of Easter.",

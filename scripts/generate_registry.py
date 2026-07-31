@@ -32,7 +32,16 @@ def validate(doc):
     if [e["number"] for e in entries] != list(range(1, 22)):
         raise ValueError("numbers must be contiguous 1..21 in order")
     seen = set()
+    required = ("number", "id", "recognized_as_ecumenical_by", "reigning_pontiff",
+                "convened_by", "confirmed_by", "year_start", "year_end", "century",
+                "significance")
     for e in entries:
+        missing = [k for k in required if k not in e]
+        if missing:
+            label = e.get("id", f"entry #{e.get('number', '?')}")
+            raise ValueError(f"{label}: missing required key(s) {missing}")
+        if not isinstance(e["convened_by"], dict) or "rp" not in e["convened_by"]:
+            raise ValueError(f"{e['id']}: convened_by must be an object containing 'rp'")
         cid = e["id"]
         if not ID_RE.match(cid):
             raise ValueError(f"malformed id: {cid}")
@@ -51,6 +60,8 @@ def validate(doc):
                 raise ValueError(f"{cid}: malformed rp cross-reference: {ref}")
         if e["year_start"] > e["year_end"]:
             raise ValueError(f"{cid}: year_start after year_end")
+        if e["century"] != (e["year_start"] - 1) // 100 + 1:
+            raise ValueError(f"{cid}: century inconsistent with year_start")
         if not isinstance(e["significance"], str) or not e["significance"].strip():
             raise ValueError(f"{cid}: empty significance")
 

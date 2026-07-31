@@ -43,7 +43,7 @@ Each entry in `data/councils.json`:
 | `year_start`, `year_end` | int | first / last year |
 | `years_raw` | string | display date span |
 | `century` | int | century of the council |
-| `reigning_pontiff` | string \| null | `rp:` cross-reference to the pope at convocation |
+| `reigning_pontiff` | string \| null | `rp:` cross-reference to the pope reigning at the council's opening — for a council convoked under one pope but substantially held under his successor, the pope of the council proper |
 | `convened_by` | object | `{ "text": string, "rp": string\|null }` — who summoned it |
 | `confirmed_by` | string \| null | `rp:` cross-reference to the confirming pope |
 | `recognized_as_ecumenical_by` | list[string] | formal-reception set (see §3) |
@@ -51,8 +51,10 @@ Each entry in `data/councils.json`:
 | `significance` | string | brief original summary of the council's import |
 | `note` | string \| null | disambiguation / context |
 
-For councils spanning several pontificates, `reigning_pontiff` names the pope at
-convocation and `note` records the succession. For the first eight councils
+For councils spanning several pontificates, `reigning_pontiff` names the pope
+reigning when the council opened — or, where a council was convoked under one
+pope but substantially held under his successor, the pope of the council
+proper — and `note` records the transfer. For the first eight councils
 `convened_by.rp` is null, because a Roman emperor summoned them.
 
 ## 3. Recognition model

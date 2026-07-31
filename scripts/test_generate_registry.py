@@ -71,6 +71,12 @@ class TestGenerator(unittest.TestCase):
         with self.assertRaises(ValueError):
             gen.validate(bad)
 
+    def test_validate_rejects_century_mismatch(self):
+        bad = copy.deepcopy(self.doc)
+        bad["entries"][0]["century"] = 99  # wrong century, years left valid
+        with self.assertRaises(ValueError):
+            gen.validate(bad)
+
     def test_validate_rejects_empty_significance(self):
         bad = copy.deepcopy(self.doc)
         bad["entries"][0]["significance"] = ""
