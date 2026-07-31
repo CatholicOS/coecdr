@@ -515,7 +515,7 @@ class TestGenerator(unittest.TestCase):
 
     def test_render_has_legend_for_communion_codes(self):
         out = gen.render(self.doc)
-        for token in ["C =", "EO =", "OO =", "CE ="]:
+        for token in ["**C** =", "**EO** =", "**OO** =", "**CE** ="]:
             self.assertIn(token, out)
 
 
