@@ -29,16 +29,18 @@ def validate(doc):
     entries = doc.get("entries", [])
     if doc.get("council_count") != 21 or len(entries) != 21:
         raise ValueError("expected exactly 21 councils")
-    required = ("number", "id", "recognized_as_ecumenical_by", "reigning_pontiff",
-                "convened_by", "confirmed_by", "year_start", "year_end", "century",
-                "significance")
+    required = ("number", "id", "name", "recognized_as_ecumenical_by",
+                "reigning_pontiff", "convened_by", "confirmed_by",
+                "year_start", "year_end", "years_raw", "century",
+                "location", "location_country", "significance")
     for e in entries:
         missing = [k for k in required if k not in e]
         if missing:
             label = e.get("id", f"entry #{e.get('number', '?')}")
             raise ValueError(f"{label}: missing required key(s) {missing}")
-        if not isinstance(e["convened_by"], dict) or "rp" not in e["convened_by"]:
-            raise ValueError(f"{e['id']}: convened_by must be an object containing 'rp'")
+        if (not isinstance(e["convened_by"], dict)
+                or "rp" not in e["convened_by"] or "text" not in e["convened_by"]):
+            raise ValueError(f"{e['id']}: convened_by must be an object containing 'rp' and 'text'")
     # Contiguity is checked after the presence guard above, so a missing
     # "number" key surfaces as a ValueError there rather than a KeyError here.
     if [e["number"] for e in entries] != list(range(1, 22)):

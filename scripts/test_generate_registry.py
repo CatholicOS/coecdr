@@ -91,6 +91,27 @@ class TestGenerator(unittest.TestCase):
         with self.assertRaises(ValueError):
             gen.validate(bad)
 
+    def test_validate_rejects_missing_name(self):
+        # render() dereferences "name", so validate() must guard it.
+        bad = copy.deepcopy(self.doc)
+        del bad["entries"][0]["name"]
+        with self.assertRaises(ValueError):
+            gen.validate(bad)
+
+    def test_validate_rejects_missing_location(self):
+        # render() dereferences "location", so validate() must guard it.
+        bad = copy.deepcopy(self.doc)
+        del bad["entries"][0]["location"]
+        with self.assertRaises(ValueError):
+            gen.validate(bad)
+
+    def test_validate_rejects_missing_convened_by_text(self):
+        # render() dereferences convened_by["text"], so validate() must guard it.
+        bad = copy.deepcopy(self.doc)
+        del bad["entries"][0]["convened_by"]["text"]
+        with self.assertRaises(ValueError):
+            gen.validate(bad)
+
     def test_render_contains_all_ids_and_header(self):
         out = gen.render(self.doc)
         self.assertIn("# Ecumenical Councils", out)

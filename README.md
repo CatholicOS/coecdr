@@ -26,7 +26,7 @@ confirmed a council.
 
 ## The identifier scheme (draft)
 
-```
+```text
 oec:<place-slug>-<roman-ordinal>     e.g. oec:nicaea-i, oec:trent-i, oec:vatican-ii
 ```
 
