@@ -51,7 +51,7 @@ def validate(doc):
                 raise ValueError(f"{cid}: malformed rp cross-reference: {ref}")
         if e["year_start"] > e["year_end"]:
             raise ValueError(f"{cid}: year_start after year_end")
-        if not e["significance"].strip():
+        if not isinstance(e["significance"], str) or not e["significance"].strip():
             raise ValueError(f"{cid}: empty significance")
 
 

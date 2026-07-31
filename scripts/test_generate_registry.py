@@ -24,13 +24,56 @@ class TestGenerator(unittest.TestCase):
 
     def test_validate_rejects_bad_communion(self):
         bad = copy.deepcopy(self.doc)
-        bad["entries"][0]["recognized_as_ecumenical_by"] = ["anglican"]
+        bad["entries"][0]["recognized_as_ecumenical_by"] = ["catholic", "anglican"]
         with self.assertRaises(ValueError):
             gen.validate(bad)
 
     def test_validate_rejects_missing_catholic(self):
         bad = copy.deepcopy(self.doc)
         bad["entries"][0]["recognized_as_ecumenical_by"] = ["eastern_orthodox"]
+        with self.assertRaises(ValueError):
+            gen.validate(bad)
+
+    def test_validate_rejects_wrong_count(self):
+        bad = copy.deepcopy(self.doc)
+        bad["entries"].pop()  # drop last entry, now len != 21
+        with self.assertRaises(ValueError):
+            gen.validate(bad)
+
+    def test_validate_rejects_non_contiguous_numbers(self):
+        bad = copy.deepcopy(self.doc)
+        bad["entries"][5]["number"] = 99  # breaks contiguity
+        with self.assertRaises(ValueError):
+            gen.validate(bad)
+
+    def test_validate_rejects_malformed_id(self):
+        bad = copy.deepcopy(self.doc)
+        bad["entries"][0]["id"] = "oec:trent"  # missing ordinal
+        with self.assertRaises(ValueError):
+            gen.validate(bad)
+
+    def test_validate_rejects_empty_recognition_set(self):
+        bad = copy.deepcopy(self.doc)
+        bad["entries"][0]["recognized_as_ecumenical_by"] = []
+        with self.assertRaises(ValueError):
+            gen.validate(bad)
+
+    def test_validate_rejects_malformed_rp_crossref(self):
+        bad = copy.deepcopy(self.doc)
+        bad["entries"][0]["reigning_pontiff"] = "paul-iii"  # missing rp: prefix
+        with self.assertRaises(ValueError):
+            gen.validate(bad)
+
+    def test_validate_rejects_year_start_after_year_end(self):
+        bad = copy.deepcopy(self.doc)
+        bad["entries"][0]["year_start"] = 400
+        bad["entries"][0]["year_end"] = 300
+        with self.assertRaises(ValueError):
+            gen.validate(bad)
+
+    def test_validate_rejects_empty_significance(self):
+        bad = copy.deepcopy(self.doc)
+        bad["entries"][0]["significance"] = ""
         with self.assertRaises(ValueError):
             gen.validate(bad)
 
