@@ -83,6 +83,14 @@ class TestGenerator(unittest.TestCase):
         with self.assertRaises(ValueError):
             gen.validate(bad)
 
+    def test_validate_rejects_missing_number_key(self):
+        # A structurally incomplete entry must raise ValueError (the required-keys
+        # guard), not KeyError from the contiguity check that dereferences "number".
+        bad = copy.deepcopy(self.doc)
+        del bad["entries"][0]["number"]
+        with self.assertRaises(ValueError):
+            gen.validate(bad)
+
     def test_render_contains_all_ids_and_header(self):
         out = gen.render(self.doc)
         self.assertIn("# Ecumenical Councils", out)

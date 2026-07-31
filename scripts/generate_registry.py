@@ -29,9 +29,6 @@ def validate(doc):
     entries = doc.get("entries", [])
     if doc.get("council_count") != 21 or len(entries) != 21:
         raise ValueError("expected exactly 21 councils")
-    if [e["number"] for e in entries] != list(range(1, 22)):
-        raise ValueError("numbers must be contiguous 1..21 in order")
-    seen = set()
     required = ("number", "id", "recognized_as_ecumenical_by", "reigning_pontiff",
                 "convened_by", "confirmed_by", "year_start", "year_end", "century",
                 "significance")
@@ -42,6 +39,12 @@ def validate(doc):
             raise ValueError(f"{label}: missing required key(s) {missing}")
         if not isinstance(e["convened_by"], dict) or "rp" not in e["convened_by"]:
             raise ValueError(f"{e['id']}: convened_by must be an object containing 'rp'")
+    # Contiguity is checked after the presence guard above, so a missing
+    # "number" key surfaces as a ValueError there rather than a KeyError here.
+    if [e["number"] for e in entries] != list(range(1, 22)):
+        raise ValueError("numbers must be contiguous 1..21 in order")
+    seen = set()
+    for e in entries:
         cid = e["id"]
         if not ID_RE.match(cid):
             raise ValueError(f"malformed id: {cid}")
